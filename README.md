@@ -1,2 +1,3 @@
 # Calculator-in-React
-apple calculator in React js 
+Apple calculator in React js
+
