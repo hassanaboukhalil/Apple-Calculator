@@ -11,25 +11,17 @@
 //     }
 // ]
 
+import RowBtns from "./RowBtns"
+
 const ButtonsPart = () => {
 
     return (
         <div className="ButtonsPart">
-            <div className="row">
-                
-            </div>
-            <div className="row">
-                
-            </div>
-            <div className="row">
-                
-            </div>
-            <div className="row">
-                
-            </div>
-            <div className="row">
-                
-            </div>
+            <RowBtns />
+            <RowBtns />
+            <RowBtns />
+            <RowBtns />
+            <RowBtns />
         </div>
     )
 }
