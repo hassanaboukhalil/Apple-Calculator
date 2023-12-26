@@ -38,7 +38,23 @@
 .Screen .ButtonsPart {
   width: 100%;
   padding: 0 20px;
-  background-color: blue;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.Screen .ButtonsPart .row-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.Screen .ButtonsPart .row-btns .Button {
+  border-radius: 50%;
+  width: 88px;
+  height: 88px;
+  font-size: 57px;
+  background-color: #505050;
+  color: white;
+  border: none;
 }
 .Screen .Line {
   width: 8.125rem;
