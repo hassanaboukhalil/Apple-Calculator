@@ -1,27 +1,14 @@
-
-// const row1_btns = [
-//     {
-//         name: "c",
-//         innertext: "C"
-//     },
-//     {
-//         name: "plus_minus",
-//         innertext: "not found",
-//         image_src: ""
-//     }
-// ]
-
 import RowBtns from "./RowBtns"
 
 const ButtonsPart = () => {
 
     return (
         <div className="ButtonsPart">
-            <RowBtns />
-            <RowBtns />
-            <RowBtns />
-            <RowBtns />
-            <RowBtns />
+            <RowBtns row_nb="1" />
+            <RowBtns row_nb="2" />
+            <RowBtns row_nb="3" />
+            <RowBtns row_nb="4" />
+            <RowBtns row_nb="5" />
         </div>
     )
 }
