@@ -5,7 +5,7 @@ import { faDivide, faXmark, faMinus, faPlus, faEquals  } from '@fortawesome/free
 const row1_btns = [
     {
       type: "text",
-      innertext: "C",
+      innertext: "AC",
       bg: "#D4D4D2",
       color: "black",
       fontSize: "42px"
@@ -28,28 +28,29 @@ const row1_btns = [
       icon: faDivide,
       bg: "#FF9500",
       color: "white",
-      fontSize: "unset"
+      fontSize: "unset",
+      id: "divide"
     }
 ]
 
 const row2_btns = [
   {
     type: "number",
-    innertext: "1",
+    innertext: "7",
     bg: "#505050",
     color: "white",
     fontSize: "57px"
   },
   {
     type: "number",
-    innertext: "2",
+    innertext: "8",
     bg: "#505050",
     color: "white",
     fontSize: "57px"
   },
   {
     type: "number",
-    innertext: "3",
+    innertext: "9",
     bg: "#505050",
     color: "white",
     fontSize: "57px"
@@ -59,7 +60,8 @@ const row2_btns = [
     icon: faXmark,
     bg: "#FF9500",
     color: "white",
-    fontSize: "unset"
+    fontSize: "unset",
+    id: "multiply"
   }
 ]
 
@@ -90,28 +92,29 @@ const row3_btns = [
     icon: faMinus,
     bg: "#FF9500",
     color: "white",
-    fontSize: "unset"
+    fontSize: "unset",
+    id: "minus"
   }
 ]
 
 const row4_btns = [
   {
     type: "number",
-    innertext: "7",
+    innertext: "1",
     bg: "#505050",
     color: "white",
     fontSize: "57px"
   },
   {
     type: "number",
-    innertext: "8",
+    innertext: "2",
     bg: "#505050",
     color: "white",
     fontSize: "57px"
   },
   {
     type: "number",
-    innertext: "9",
+    innertext: "3",
     bg: "#505050",
     color: "white",
     fontSize: "57px"
@@ -121,7 +124,8 @@ const row4_btns = [
     icon: faPlus,
     bg: "#FF9500",
     color: "white",
-    fontSize: "unset"
+    fontSize: "unset",
+    id: "plus"
   }
 ]
 
