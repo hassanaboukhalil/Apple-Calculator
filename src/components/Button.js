@@ -1,9 +1,19 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useValues } from "../context/valuesContext";
+import { useEffect } from "react";
+// import { useState } from "react";
+
+// let value1turn;
+// let setValue1turn = (bool) => value1turn = bool;
 
 const Button = ({btn_obj}) => {
 
-    let { value1 , value2 , output , setValue1 , setValue2 , setOutput} = useValues()
+    let { value1, setValue1, value2, setValue2, operator, setOperator, output, setOutput, value1turn, setValue1turn} = useValues()
+
+    //// const [value1, setValue1] = useState("")
+    //// const [value2, setValue2] = useState("")
+    //// const [operator , setOperator] = useState("")
+    //// const [value1turn, setValue1turn] = useState(true)
 
     let styles = {
         backgroundColor: btn_obj.bg,
@@ -24,8 +34,11 @@ const Button = ({btn_obj}) => {
 
 
     function btn_clicked(){
-        if("0123456789.".includes(btn_obj.innertext)){
+        if("0123456789".includes(btn_obj.innertext)){
             nb_clicked(btn_obj.innertext)
+        }
+        else if(".".includes(btn_obj.innertext)){
+            dot_clicked(btn_obj.innertext)
         }
         else if(btn_obj.type === "fontawsome"){
             if("plus-minus-multiply-divide".includes(btn_obj.id)){
@@ -49,30 +62,124 @@ const Button = ({btn_obj}) => {
 
 
     function nb_clicked(nb){
-        // if(output === "0"){
-        //     setValue1(btn_obj.innertext)
-        //     setOutput(btn_obj.innertext)
-        // }
-        // else{
-        //     setValue1(value1 + btn_obj.innertext)
-        //     setOutput(value1 + btn_obj.innertext)
-        // }
-        setValue1(value1 + nb)
-        setOutput(value1)
+        if(value1turn){
+            setOutput(value1 + nb)
+            setValue1(value1 + nb)
+
+
+            // setOutput(value1)
+        }
+        else{
+            document.getElementById(operator).style.color = "white"
+            document.getElementById(operator).style.backgroundColor = "#FF9500"
+            setOutput(value2 + nb)
+            setValue2(value2 + nb)
+            // setValue2(value2 + nb)
+            // setOutput(value2)
+        }
     }
 
-    function operator_clicked(op){
 
+    // useEffect(() => { 
+    //     console.log(value1)
+    // }, [value1]);
+
+
+
+    function dot_clicked(dot){
+        if(!output.includes(".")){
+            if(operator === ""){
+                setValue1(value1 + dot)
+                setOutput(value1)
+            }
+            else{
+                setValue2(value2 + dot)
+                setOutput(value2)
+            }
+        }
+    }
+
+    function operator_clicked(op){ //* plus minus
+        /**
+         * ? first time
+         * *  ""  !== "plus" --> true
+         *      &&
+         * *  ""  !== ""     --> false
+         *
+         * ! --> false
+         */
+        /**
+         * ? second time
+         * *  "plus"  !== "minus" --> true
+         *      &&
+         * *  "plus"  !== ""     -->  true
+         *
+         * ! --> true
+         */
+        if(operator !== ""){
+            document.getElementById(operator).style.color = "white"
+            document.getElementById(operator).style.backgroundColor = "#FF9500"
+        }
+        document.getElementById(op).style.color = "#FF9500"
+        document.getElementById(op).style.backgroundColor = "white"
+        if(value2 !== ""){
+            equal()
+            setValue1(output)
+        }
+        setOperator(op)
+        setValue1turn(false)
     }
 
     function equal(){
-        
+        /**
+             ** value1 = 10
+             *? operator = +
+             ** value2 = 15
+             *! equal()
+             ** output = 15
+             ** value1 = ""
+             *? operator = ""
+             ** value2 = ""
+             ** value1turn = true
+        */
+
+        let total;
+        if(value1 === "Error"){
+            total = "Error"
+        }
+        else{
+            if(operator === "plus") total = Number(value1) + Number(value2)
+            else if(operator === "minus") total = Number(value1) - Number(value2)
+            else if(operator === "multiplay") total = Number(value1) * Number(value2)
+            else{
+                if(value2 === "0"){
+                    total = "Error"
+                }
+                else{
+                    total = Number(value1)/Number(value2)
+                }
+            }
+        }
+        if(operator !== ""){
+            document.getElementById(operator).style.color = "white"
+            document.getElementById(operator).style.backgroundColor = "#FF9500"
+        }
+        setOutput(total)
+        setValue1("")
+        setOperator("")
+        setValue2("")
+        setValue1turn(true)
     }
 
     function AC_C_clicked(AC_C){
         setValue1("")
+        setOperator("")
         setValue2("")
         setOutput("0")
+        if(operator !== ""){
+            document.getElementById(operator).style.color = "white" //
+            document.getElementById(operator).style.backgroundColor = "#FF9500"
+        }
     }
 
     function percent_clicked(){

@@ -29,7 +29,8 @@ const row1_btns = [
       bg: "#FF9500",
       color: "white",
       fontSize: "unset",
-      id: "divide"
+      id: "divide",
+      operator: "/"
     }
 ]
 
@@ -61,7 +62,8 @@ const row2_btns = [
     bg: "#FF9500",
     color: "white",
     fontSize: "unset",
-    id: "multiply"
+    id: "multiply",
+    operator: "*"
   }
 ]
 
