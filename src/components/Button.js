@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useValues } from "../context/valuesContext";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 // import { useState } from "react";
 
 // let value1turn;
@@ -8,18 +8,19 @@ import { useEffect } from "react";
 
 // let op_element =
 
-let v1 = ""
+// let v1 = ""
 
 const Button = ({btn_obj}) => {
 
-    let { value1, setValue1, value2, setValue2, operator, setOperator, output, setOutput, value1turn, setValue1turn} = useValues()
+    // let { value1, setValue1, value2, setValue2, operator, setOperator, output, setOutput, value1turn, setValue1turn} = useValues()
+    let {calc, setCalc} = useValues()
 
     //// const [value1, setValue1] = useState("")
     //// const [value2, setValue2] = useState("")
     //// const [operator , setOperator] = useState("")
     //// const [value1turn, setValue1turn] = useState(true)
 
-    v1 = value1
+    // v1 = value1
 
     let styles = {
         backgroundColor: btn_obj.bg,
@@ -44,7 +45,7 @@ const Button = ({btn_obj}) => {
             nb_clicked(btn_obj.innertext)
         }
         else if(".".includes(btn_obj.innertext)){
-            dot_clicked(btn_obj.innertext)
+            dot_clicked()
         }
         else if(btn_obj.type === "fontawsome"){
             if("plus-minus-multiply-divide".includes(btn_obj.id)){
@@ -68,38 +69,50 @@ const Button = ({btn_obj}) => {
 
 
     function nb_clicked(nb){
-        if(value1turn){
+        if(calc.value1turn){
             // setOutput(value1 + nb)
             // setValue1(value1 + nb)
 
-            if(output === "0"){
-                v1 = v1 + nb
-                setValue1(v1)
-                // value1 = value1 + nb
-                setOutput(v1)
-                // setValue1(nb)
-            }
-            else{
-                v1 = v1 + nb
-                setValue1(v1)
-                // value1 = value1 + nb
-                setOutput(v1)
+            // if(calc.output === "0"){
+            //     // v1 = v1 + nb
+            //     // setValue1(v1)
+            //     // // value1 = value1 + nb
+            //     // setOutput(v1)
+            //     // setValue1(nb)
+            // }
+            // else{
+            //     // v1 = v1 + nb
+            //     // setValue1(v1)
+            //     // // value1 = value1 + nb
+            //     // setOutput(v1)
 
-                // value1 = value1 + nb
-                // setValue1(nb)
-                // setOutput(value1)
-            }
+            //     // value1 = value1 + nb
+            //     // setValue1(nb)
+            //     // setOutput(value1)
+            // }
+
+            setCalc({
+                ...calc,
+                value1: calc.value1 + nb,
+                output: calc.value1 + nb
+            })
+
             // setValue1(value1 + nb)
         }
         else{
-            document.getElementById(operator).style.color = "white"
-            document.getElementById(operator).style.backgroundColor = "#FF9500"
-            setOutput(value2 + nb)
-            // setValue2(value2 + nb)
-            setValue2(output)
+            document.getElementById(calc.operator).style.color = "white"
+            document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
+            // setOutput(value2 + nb)
+            // // setValue2(value2 + nb)
+            // setValue2(output)
 
             // setValue2(value2 + nb)
             // setOutput(value2)
+            setCalc({
+                ...calc,
+                value2: calc.value2 + nb,
+                output: calc.value2 + nb
+            })
         }
     }
 
@@ -110,15 +123,30 @@ const Button = ({btn_obj}) => {
 
 
 
-    function dot_clicked(dot){
-        if(!output.includes(".")){
-            if(operator === ""){
-                setValue1(value1 + dot)
-                setOutput(value1)
+    function dot_clicked(){
+        if(!calc.output.includes(".")){
+            if(!calc.value1 && !calc.value2 && calc.output === "0"){
+                setCalc({
+                    ...calc,
+                    value1: "0.",
+                    output: "0."
+                })
+            }
+            else if(calc.value1turn){
+                setCalc({
+                    ...calc,
+                    value1: calc.value1 + ".",
+                    output: calc.value1 + "."
+                })
             }
             else{
-                setValue2(value2 + dot)
-                setOutput(value2)
+                setCalc({
+                    ...calc,
+                    value2: calc.value2 + ".",
+                    output: calc.value2 + "."
+                })
+                // setValue2(value2 + dot)
+                // setOutput(value2)
             }
         }
     }
@@ -140,20 +168,37 @@ const Button = ({btn_obj}) => {
          *
          * ! --> true
          */
-        if(operator !== ""){
-            document.getElementById(operator).style.color = "white"
-            document.getElementById(operator).style.backgroundColor = "#FF9500"
+        if(calc.operator !== ""){
+            document.getElementById(calc.operator).style.color = "white"
+            document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
         }
-        if(value2 !== ""){
+        if(calc.value1 && calc.value2 && calc.output === "0"){
+            setCalc({
+                ...calc,
+                value1: calc.output,
+            })
+        }
+
+        if(calc.value2 !== ""){
             equal() // output = 30
             // setOutput(output)
-            setValue1(output)
-            // setOutput("")
-            setValue2("")
+            // setValue1(output)
+            // // setOutput("")
+            // setValue2("")
             // setValue1turn(false)
+
+            setCalc({
+                ...calc,
+                value1: calc.output,
+            })
         }
-        setOperator(op)
-        setValue1turn(false)
+        // setOperator(op)
+        // setValue1turn(false)
+        setCalc({
+            ...calc,
+            operator: op,
+            value1turn: false
+        })
         document.getElementById(op).style.color = "#FF9500"
         document.getElementById(op).style.backgroundColor = "white"
     }
@@ -172,41 +217,56 @@ const Button = ({btn_obj}) => {
         */
 
         let total;
-        if(value1 === "Error"){
+        if(calc.value1 === "Error"){
             total = "Error"
         }
         else{
-            if(operator === "plus") total = Number(value1) + Number(value2)
-            else if(operator === "minus") total = Number(value1) - Number(value2)
-            else if(operator === "multiplay") total = Number(value1) * Number(value2)
+            if(calc.operator === "plus") total = Number(calc.value1) + Number(calc.value2)
+            else if(calc.operator === "minus") total = Number(calc.value1) - Number(calc.value2)
+            else if(calc.operator === "multiply") total = Number(calc.value1) * Number(calc.value2)
             else{
-                if(value2 === "0"){
+                if(calc.value2 === "0"){
                     total = "Error"
                 }
                 else{
-                    total = Number(value1)/Number(value2)
+                    total = Number(calc.value1)/Number(calc.value2)
                 }
             }
         }
-        // if(operator !== ""){
-        //     document.getElementById(operator).style.color = "white"
-        //     document.getElementById(operator).style.backgroundColor = "#FF9500"
-        // }
-        setOutput(total)
-        setValue1("")
-        setOperator("")
-        setValue2("")
-        setValue1turn(true)
+        //// if(operator !== ""){
+        ////     document.getElementById(operator).style.color = "white"
+        ////     document.getElementById(operator).style.backgroundColor = "#FF9500"
+        //// }
+        // setOutput(total)
+        // setValue1("")
+        // setOperator("")
+        // setValue2("")
+        // setValue1turn(true)
+        setCalc({
+            ...calc,
+            value1: "",
+            value2: "",
+            operator: "",
+            output: total,
+            value1turn: true
+        })
     }
 
     function AC_C_clicked(AC_C){
-        setValue1("")
-        setOperator("")
-        setValue2("")
-        setOutput("0")
-        if(operator !== ""){
-            document.getElementById(operator).style.color = "white" //
-            document.getElementById(operator).style.backgroundColor = "#FF9500"
+        // setValue1("")
+        // setOperator("")
+        // setValue2("")
+        // setOutput("0")
+        setCalc({
+            ...calc,
+            value1: "",
+            value2: "",
+            operator: "",
+            output: "0"
+        })
+        if(calc.operator !== ""){
+            document.getElementById(calc.operator).style.color = "white" //
+            document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
         }
     }
 
@@ -215,7 +275,7 @@ const Button = ({btn_obj}) => {
     }
 
     function plus_minus(){
-        setOutput(Number(output) * -1 + "")
+        // setOutput(Number(output) * -1 + "")
     }
 
 
