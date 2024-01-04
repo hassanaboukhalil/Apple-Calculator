@@ -8,7 +8,7 @@ const row1_btns = [
       innertext: "AC",
       bg: "#D4D4D2",
       color: "black",
-      fontSize: "42px"
+      fontSize: "38px"
     },
     {
       type: "svg",
@@ -40,21 +40,21 @@ const row2_btns = [
     innertext: "7",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px" // 57px
   },
   {
     type: "number",
     innertext: "8",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "number",
     innertext: "9",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "fontawsome",
@@ -73,21 +73,21 @@ const row3_btns = [
     innertext: "4",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "number",
     innertext: "5",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "number",
     innertext: "6",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "fontawsome",
@@ -105,21 +105,21 @@ const row4_btns = [
     innertext: "1",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "number",
     innertext: "2",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "number",
     innertext: "3",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "fontawsome",
@@ -137,14 +137,14 @@ const row5_btns = [
     innertext: "1",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "number",
     innertext: "0",
     bg: "#505050",
     color: "white",
-    fontSize: "57px"
+    fontSize: "44px"
   },
   {
     type: "text",

@@ -6,6 +6,10 @@ import { useEffect } from "react";
 // let value1turn;
 // let setValue1turn = (bool) => value1turn = bool;
 
+// let op_element =
+
+let v1 = ""
+
 const Button = ({btn_obj}) => {
 
     let { value1, setValue1, value2, setValue2, operator, setOperator, output, setOutput, value1turn, setValue1turn} = useValues()
@@ -14,6 +18,8 @@ const Button = ({btn_obj}) => {
     //// const [value2, setValue2] = useState("")
     //// const [operator , setOperator] = useState("")
     //// const [value1turn, setValue1turn] = useState(true)
+
+    v1 = value1
 
     let styles = {
         backgroundColor: btn_obj.bg,
@@ -63,17 +69,35 @@ const Button = ({btn_obj}) => {
 
     function nb_clicked(nb){
         if(value1turn){
-            setOutput(value1 + nb)
-            setValue1(value1 + nb)
+            // setOutput(value1 + nb)
+            // setValue1(value1 + nb)
 
+            if(output === "0"){
+                v1 = v1 + nb
+                setValue1(v1)
+                // value1 = value1 + nb
+                setOutput(v1)
+                // setValue1(nb)
+            }
+            else{
+                v1 = v1 + nb
+                setValue1(v1)
+                // value1 = value1 + nb
+                setOutput(v1)
 
-            // setOutput(value1)
+                // value1 = value1 + nb
+                // setValue1(nb)
+                // setOutput(value1)
+            }
+            // setValue1(value1 + nb)
         }
         else{
             document.getElementById(operator).style.color = "white"
             document.getElementById(operator).style.backgroundColor = "#FF9500"
             setOutput(value2 + nb)
-            setValue2(value2 + nb)
+            // setValue2(value2 + nb)
+            setValue2(output)
+
             // setValue2(value2 + nb)
             // setOutput(value2)
         }
@@ -120,14 +144,18 @@ const Button = ({btn_obj}) => {
             document.getElementById(operator).style.color = "white"
             document.getElementById(operator).style.backgroundColor = "#FF9500"
         }
-        document.getElementById(op).style.color = "#FF9500"
-        document.getElementById(op).style.backgroundColor = "white"
         if(value2 !== ""){
-            equal()
+            equal() // output = 30
+            // setOutput(output)
             setValue1(output)
+            // setOutput("")
+            setValue2("")
+            // setValue1turn(false)
         }
         setOperator(op)
         setValue1turn(false)
+        document.getElementById(op).style.color = "#FF9500"
+        document.getElementById(op).style.backgroundColor = "white"
     }
 
     function equal(){
@@ -160,10 +188,10 @@ const Button = ({btn_obj}) => {
                 }
             }
         }
-        if(operator !== ""){
-            document.getElementById(operator).style.color = "white"
-            document.getElementById(operator).style.backgroundColor = "#FF9500"
-        }
+        // if(operator !== ""){
+        //     document.getElementById(operator).style.color = "white"
+        //     document.getElementById(operator).style.backgroundColor = "#FF9500"
+        // }
         setOutput(total)
         setValue1("")
         setOperator("")
@@ -189,6 +217,12 @@ const Button = ({btn_obj}) => {
     function plus_minus(){
         setOutput(Number(output) * -1 + "")
     }
+
+
+    // useEffect(()=>{
+    //     // setOutput(value1)
+    //     setValue1(value1)
+    // },[value1,setValue1])
 
 
     return (
