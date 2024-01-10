@@ -1,26 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useValues } from "../context/valuesContext";
-// import { useEffect } from "react";
-// import { useState } from "react";
-
-// let value1turn;
-// let setValue1turn = (bool) => value1turn = bool;
-
-// let op_element =
-
-// let v1 = ""
 
 const Button = ({btn_obj}) => {
 
-    // let { value1, setValue1, value2, setValue2, operator, setOperator, output, setOutput, value1turn, setValue1turn} = useValues()
     let {calc, setCalc} = useValues()
-
-    //// const [value1, setValue1] = useState("")
-    //// const [value2, setValue2] = useState("")
-    //// const [operator , setOperator] = useState("")
-    //// const [value1turn, setValue1turn] = useState(true)
-
-    // v1 = value1
 
     let styles = {
         backgroundColor: btn_obj.bg,
@@ -66,62 +49,34 @@ const Button = ({btn_obj}) => {
         }
     }
 
-
-
     function nb_clicked(nb){
         if(calc.value1turn){
-            // setOutput(value1 + nb)
-            // setValue1(value1 + nb)
-
-            // if(calc.output === "0"){
-            //     // v1 = v1 + nb
-            //     // setValue1(v1)
-            //     // // value1 = value1 + nb
-            //     // setOutput(v1)
-            //     // setValue1(nb)
-            // }
-            // else{
-            //     // v1 = v1 + nb
-            //     // setValue1(v1)
-            //     // // value1 = value1 + nb
-            //     // setOutput(v1)
-
-            //     // value1 = value1 + nb
-            //     // setValue1(nb)
-            //     // setOutput(value1)
-            // }
-
             setCalc({
                 ...calc,
                 value1: calc.value1 + nb,
                 output: calc.value1 + nb
             })
-
-            // setValue1(value1 + nb)
         }
         else{
-            document.getElementById(calc.operator).style.color = "white"
-            document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
-            // setOutput(value2 + nb)
-            // // setValue2(value2 + nb)
-            // setValue2(output)
-
-            // setValue2(value2 + nb)
-            // setOutput(value2)
-            setCalc({
-                ...calc,
-                value2: calc.value2 + nb,
-                output: calc.value2 + nb
-            })
+            if(calc.value2 === ''){
+                toggleOperatorBtnActivity()
+            }
+            if(calc.value2 === "-0"){
+                setCalc({
+                    ...calc,
+                    value2: -(nb),
+                    output: -(nb)
+                })
+            }
+            else{
+                setCalc({
+                    ...calc,
+                    value2: calc.value2 + nb,
+                    output: calc.value2 + nb
+                })
+            }
         }
     }
-
-
-    // useEffect(() => { 
-    //     console.log(value1)
-    // }, [value1]);
-
-
 
     function dot_clicked(){
         if(!calc.output.includes(".")){
@@ -145,8 +100,6 @@ const Button = ({btn_obj}) => {
                     value2: calc.value2 + ".",
                     output: calc.value2 + "."
                 })
-                // setValue2(value2 + dot)
-                // setOutput(value2)
             }
         }
     }
@@ -237,11 +190,6 @@ const Button = ({btn_obj}) => {
         ////     document.getElementById(operator).style.color = "white"
         ////     document.getElementById(operator).style.backgroundColor = "#FF9500"
         //// }
-        // setOutput(total)
-        // setValue1("")
-        // setOperator("")
-        // setValue2("")
-        // setValue1turn(true)
         setCalc({
             ...calc,
             value1: "",
@@ -253,10 +201,6 @@ const Button = ({btn_obj}) => {
     }
 
     function AC_C_clicked(AC_C){
-        // setValue1("")
-        // setOperator("")
-        // setValue2("")
-        // setOutput("0")
         setCalc({
             ...calc,
             value1: "",
@@ -265,25 +209,91 @@ const Button = ({btn_obj}) => {
             output: "0"
         })
         if(calc.operator !== ""){
-            document.getElementById(calc.operator).style.color = "white" //
+            document.getElementById(calc.operator).style.color = "white"
             document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
         }
     }
 
     function percent_clicked(){
-
+        if(calc.value1turn){
+            setCalc({
+                ...calc,
+                value1: String(Number(calc.value1)/100),
+                output: String(Number(calc.value1)/100),
+            })
+        }
+        else{
+            if(isOperatorBtnActive){
+                setCalc({
+                    ...calc,
+                    value2: 0,
+                    output: 0
+                })
+                toggleOperatorBtnActivity()
+            }
+            else{
+                setCalc({
+                    ...calc,
+                    value2: String(Number(calc.value2)/100),
+                    output: String(Number(calc.value2)/100)
+                })
+            }
+        }
     }
 
     function plus_minus(){
         // setOutput(Number(output) * -1 + "")
+        if(calc.value1turn){
+            setCalc({
+                ...calc,
+                value1: calc.value1 * -1,
+                output: calc.value1 * -1
+            })
+        }
+        else{
+            if(isOperatorBtnActive){
+                setCalc({
+                    ...calc,
+                    value2: "-0",
+                    output: "-0"
+                })
+                toggleOperatorBtnActivity()
+            }
+            else{
+                setCalc({
+                    ...calc,
+                    value2: calc.value2 * -1,
+                    output: calc.value2 * -1
+                })
+            }
+        }
     }
 
+    function isOperatorBtnActive(){
+        if(calc.operator !== "" && calc.value2 === ""){
+            return true
+        }
+        return false
+    }
 
-    // useEffect(()=>{
-    //     // setOutput(value1)
-    //     setValue1(value1)
-    // },[value1,setValue1])
+    function toggleOperatorBtnActivity(){
+        /*
+            - calc.operator = +
+            - calc.value2 = ''
 
+            -->
+                - operator color = white
+                - operator backgroundColor = "#FF9500"
+        */
+        if(calc.operator !== "" && calc.value2 === ""){
+            document.getElementById(calc.operator).style.color = "white"
+            document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
+        }
+        else{
+            document.getElementById(calc.operator).style.color = "#FF9500"
+            document.getElementById(calc.operator).style.backgroundColor = "white"
+        }
+    }
 
     return (
         <button className="Button" style={styles} onClick={btn_clicked} id={btn_obj.id ? btn_obj.id : ""}>
