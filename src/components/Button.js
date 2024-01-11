@@ -51,6 +51,9 @@ const Button = ({btn_obj}) => {
 
     function nb_clicked(nb){
         if(calc.value1turn){
+            if(calc.value1 === ""){
+                toggle_AC_C("C")
+            }
             setCalc({
                 ...calc,
                 value1: calc.value1 + nb,
@@ -59,7 +62,8 @@ const Button = ({btn_obj}) => {
         }
         else{
             if(calc.value2 === ''){
-                toggleOperatorBtnActivity()
+                toggleOperatorBtnActivity("off")
+                toggle_AC_C("C")
             }
             if(calc.value2 === "-0"){
                 setCalc({
@@ -79,8 +83,8 @@ const Button = ({btn_obj}) => {
     }
 
     function dot_clicked(){
-        if(!calc.output.includes(".")){
-            if(!calc.value1 && !calc.value2 && calc.output === "0"){
+        if(!(String(calc.output)).includes(".")){
+            if(calc.value1 === "" && calc.value2 === ""){
                 setCalc({
                     ...calc,
                     value1: "0.",
@@ -106,7 +110,7 @@ const Button = ({btn_obj}) => {
 
     function operator_clicked(op){ //* plus minus
         /**
-         * ? first time
+         * # first time
          * *  ""  !== "plus" --> true
          *      &&
          * *  ""  !== ""     --> false
@@ -114,7 +118,7 @@ const Button = ({btn_obj}) => {
          * ! --> false
          */
         /**
-         * ? second time
+         * # second time
          * *  "plus"  !== "minus" --> true
          *      &&
          * *  "plus"  !== ""     -->  true
@@ -122,16 +126,15 @@ const Button = ({btn_obj}) => {
          * ! --> true
          */
         if(calc.operator !== ""){
-            document.getElementById(calc.operator).style.color = "white"
-            document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
+            toggleOperatorBtnActivity("off")
         }
-        if(calc.value1 && calc.value2 && calc.output === "0"){
-            setCalc({
-                ...calc,
-                value1: calc.output,
-            })
-        }
-
+        // if(calc.value1 && calc.value2 && calc.output === "0"){
+        //     setCalc({
+        //         ...calc,
+        //         value1: calc.output,
+        //     })
+        // }
+        toggleOperatorBtnActivity("on",op)
         if(calc.value2 !== ""){
             equal() // output = 30
             // setOutput(output)
@@ -140,20 +143,28 @@ const Button = ({btn_obj}) => {
             // setValue2("")
             // setValue1turn(false)
 
-            setCalc({
-                ...calc,
-                value1: calc.output,
-            })
+            // setCalc({
+            //     ...calc,
+            //     value1: calc.output,
+            // })
         }
-        // setOperator(op)
-        // setValue1turn(false)
-        setCalc({
-            ...calc,
-            operator: op,
-            value1turn: false
-        })
-        document.getElementById(op).style.color = "#FF9500"
-        document.getElementById(op).style.backgroundColor = "white"
+        
+        // setCalc({
+        //     ...calc,
+        //     // value2: "",
+        //     operator: op,
+        //     // value1: calc.output,
+        //     value1turn: false
+        // })
+        setCalc(prevState => {
+            const updatedObject = {
+                ...prevState,
+                operator: op,
+                value1: prevState.output,
+                value1turn: false
+            }
+            return updatedObject;
+        });
     }
 
     function equal(){
@@ -190,28 +201,85 @@ const Button = ({btn_obj}) => {
         ////     document.getElementById(operator).style.color = "white"
         ////     document.getElementById(operator).style.backgroundColor = "#FF9500"
         //// }
-        setCalc({
-            ...calc,
-            value1: "",
-            value2: "",
-            operator: "",
-            output: total,
-            value1turn: true
-        })
+        // setCalc({
+        //     ...calc,
+        //     output: total,
+        //     value1: "",
+        //     value2: "",
+        //     operator: "",
+        //     value1turn: true
+        // })
+        // setCalc({
+        //     ...calc,
+        //     output: total,
+        //     value1: "",
+        //     value2: "",
+        //     operator: "",
+        //     value1turn: true
+        // })
+        setCalc(prevState => {
+            const updatedObject = {
+                ...prevState,
+                output: total,
+                value1: "",
+                value2: "",
+                operator: "",
+                value1turn: true
+            }
+            return updatedObject;
+        });
+        // alert(calc.output)
+        // alert(total)
+
     }
 
     function AC_C_clicked(AC_C){
-        setCalc({
-            ...calc,
-            value1: "",
-            value2: "",
-            operator: "",
-            output: "0"
-        })
+        // setCalc({
+        //     ...calc,
+        //     value1: "",
+        //     value2: "",
+        //     operator: "",
+        //     output: "0"
+        // })
         if(calc.operator !== ""){
             document.getElementById(calc.operator).style.color = "white"
             document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
         }
+        if(document.getElementById("AC_C").innerHTML === "C"){
+            if(calc.value2 === "" && isOperatorBtnActive()){
+                setCalc({
+                    ...calc,
+                    output: "0"
+                })
+                toggleOperatorBtnActivity("on")
+            }
+            else if(calc.value2 !== ""){
+                setCalc({
+                    ...calc,
+                    value2: "",
+                    output: "0"
+                })
+                toggleOperatorBtnActivity("on")
+            }
+            else{
+                setCalc({
+                    ...calc,
+                    value1: "",
+                    output: "0"
+                })
+            }
+        }
+        else{
+            setCalc({
+                ...calc,
+                value1: "",
+                value2: "",
+                operator: "",
+                output: "0",
+                value1turn: true
+            })
+        }
+        toggle_AC_C("AC")
     }
 
     function percent_clicked(){
@@ -223,13 +291,13 @@ const Button = ({btn_obj}) => {
             })
         }
         else{
-            if(isOperatorBtnActive){
+            if(isOperatorBtnActive()){
                 setCalc({
                     ...calc,
                     value2: 0,
                     output: 0
                 })
-                toggleOperatorBtnActivity()
+                toggleOperatorBtnActivity("off")
             }
             else{
                 setCalc({
@@ -251,13 +319,13 @@ const Button = ({btn_obj}) => {
             })
         }
         else{
-            if(isOperatorBtnActive){
+            if(isOperatorBtnActive()){
                 setCalc({
                     ...calc,
                     value2: "-0",
                     output: "-0"
                 })
-                toggleOperatorBtnActivity()
+                toggleOperatorBtnActivity("off")
             }
             else{
                 setCalc({
@@ -276,7 +344,10 @@ const Button = ({btn_obj}) => {
         return false
     }
 
-    function toggleOperatorBtnActivity(){
+    function toggleOperatorBtnActivity(toggle, op = calc.operator){
+        /*
+            * @param {string} toggle can be "on" or "off"
+        */
         /*
             - calc.operator = +
             - calc.value2 = ''
@@ -285,14 +356,36 @@ const Button = ({btn_obj}) => {
                 - operator color = white
                 - operator backgroundColor = "#FF9500"
         */
-        if(calc.operator !== "" && calc.value2 === ""){
-            document.getElementById(calc.operator).style.color = "white"
-            document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
+        // if(calc.operator !== "" && calc.value2 === ""){
+        //     document.getElementById(calc.operator).style.color = "white"
+        //     document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
+        // }
+        // else{
+        //     document.getElementById(calc.operator).style.color = "#FF9500"
+        //     document.getElementById(calc.operator).style.backgroundColor = "white"
+        // }
+        // if(calc.operator !== ""){
+        //     if(toggle === "on"){
+        //         document.getElementById(calc.operator).style.color = "#FF9500"
+        //         document.getElementById(calc.operator).style.backgroundColor = "white"
+        //     }
+        //     else{
+        //         document.getElementById(calc.operator).style.color = "white"
+        //         document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
+        //     }
+        // }
+        if(toggle === "on"){
+            document.getElementById(op).style.color = "#FF9500"
+            document.getElementById(op).style.backgroundColor = "white"
         }
         else{
-            document.getElementById(calc.operator).style.color = "#FF9500"
-            document.getElementById(calc.operator).style.backgroundColor = "white"
+            document.getElementById(op).style.color = "white"
+            document.getElementById(op).style.backgroundColor = "#FF9500"
         }
+    }
+
+    function toggle_AC_C(AC_C){
+        document.getElementById("AC_C").innerHTML = AC_C
     }
 
     return (

@@ -6,6 +6,7 @@ const row1_btns = [
     {
       type: "text",
       innertext: "AC",
+      id: "AC_C",
       bg: "#D4D4D2",
       color: "black",
       fontSize: "38px"
