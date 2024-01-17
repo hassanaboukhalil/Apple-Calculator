@@ -10,5 +10,5 @@ const ResultScreen = () => {
         </div>
     )
 }
-// {calc.output}
+
 export default ResultScreen

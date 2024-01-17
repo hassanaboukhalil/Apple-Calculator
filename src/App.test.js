@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-// import App from './App';
 import ResultScreen from './components/ResultScreen';
 import { ValuesProvider } from './context/valuesContext';
 
