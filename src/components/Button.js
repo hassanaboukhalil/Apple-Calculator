@@ -52,14 +52,18 @@ const Button = ({btn_obj}) => {
     function nb_clicked(nb){
         let v1, v2, otpt
         if(calc.value1turn){
-            if(calc.value1 === ""){
-                toggle_AC_C("C")
-            }
             if(calc.value1 === "-0"){
                 v1 = -(nb)
                 otpt = -(nb)
             }
+            else if(calc.value1.length === 9){
+                v1 = calc.value1
+                otpt = calc.value1
+            }
             else{
+                if(calc.value1 === ""){
+                    toggle_AC_C("C")
+                }
                 v1 = calc.value1 + nb
                 otpt = calc.value1 + nb
             }
@@ -70,15 +74,19 @@ const Button = ({btn_obj}) => {
             })
         }
         else{
-            if(calc.value2 === ''){
-                toggleOperatorBtnActivity("off")
-                toggle_AC_C("C")
-            }
             if(calc.value2 === "-0"){
                 v2 = -(nb)
                 otpt = -(nb)
             }
+            else if(calc.value2.length === 9){
+                v2 = calc.value2
+                otpt = calc.value2
+            }
             else{
+                if(calc.value2 === ''){
+                    toggleOperatorBtnActivity("off")
+                    toggle_AC_C("C")
+                }
                 v2 = calc.value2 + nb
                 otpt = calc.value2 + nb
             }
@@ -93,7 +101,6 @@ const Button = ({btn_obj}) => {
     function dot_clicked(){
         let v1, v2 , otpt
         if(!(String(calc.value1)).includes(".") && calc.value1turn){
-            // let v1, v2 , otpt
             if(calc.value1 === "" && calc.value2 === ""){
                 v1 = "0."
                 otpt = "0."
@@ -104,17 +111,6 @@ const Button = ({btn_obj}) => {
                 otpt = calc.value1 + "."
                 v2 = ''
             }
-            // else if(!calc.value1turn && calc.value2 === ''){
-            //     v1 = calc.value1
-            //     v2 = "0."
-            //     otpt = "0."
-            //     toggleOperatorBtnActivity("off")
-            // }
-            // else{
-            //     v1 = calc.value1
-            //     v2 = calc.value2 + "."
-            //     otpt = calc.value2 + "."
-            // }
             setCalc({
                 ...calc,
                 value1: v1,
@@ -135,9 +131,6 @@ const Button = ({btn_obj}) => {
                 v1 = calc.value1
             }
 
-            // v1 = calc.value1
-            // v2 = "0."
-            // otpt = "0."
             toggleOperatorBtnActivity("off")
             setCalc({
                 ...calc,
@@ -148,54 +141,14 @@ const Button = ({btn_obj}) => {
         }
     }
 
-    function operator_clicked(op){ //* plus minus
-        /**
-         * # first time
-         * *  ""  !== "plus" --> true
-         *      &&
-         * *  ""  !== ""     --> false
-         *
-         * ! --> false
-         */
-        /**
-         * # second time
-         * *  "plus"  !== "minus" --> true
-         *      &&
-         * *  "plus"  !== ""     -->  true
-         *
-         * ! --> true
-         */
+    function operator_clicked(op){
         if(calc.operator !== ""){
             toggleOperatorBtnActivity("off")
         }
-        // if(calc.value1 && calc.value2 && calc.output === "0"){
-        //     setCalc({
-        //         ...calc,
-        //         value1: calc.output,
-        //     })
-        // }
         toggleOperatorBtnActivity("on",op)
         if(calc.value2 !== ""){
-            equal() // output = 30
-            // setOutput(output)
-            // setValue1(output)
-            // // setOutput("")
-            // setValue2("")
-            // setValue1turn(false)
-
-            // setCalc({
-            //     ...calc,
-            //     value1: calc.output,
-            // })
+            equal()
         }
-        
-        // setCalc({
-        //     ...calc,
-        //     // value2: "",
-        //     operator: op,
-        //     // value1: calc.output,
-        //     value1turn: false
-        // })
         setCalc(prevState => {
             const updatedObject = {
                 ...prevState,
@@ -208,34 +161,11 @@ const Button = ({btn_obj}) => {
     }
 
     function equal(){
-        /**
-             ** value1 = 10
-             *? operator = +
-             ** value2 = 15
-             *! equal()
-             ** output = 15
-             ** value1 = ""
-             *? operator = ""
-             ** value2 = ""
-             ** value1turn = true
-        */
-
         let total, v1, v2;
         if(calc.value1 === "Error"){
             total = "Error"
         }
         else if(calc.value2 === "" && !isOperatorBtnActive()){
-            // setCalc(prevState => {
-            //     const updatedObject = {
-            //         ...prevState,
-            //         output: calc.value1,
-            //         value1: "",
-            //         value2: "",
-            //         operator: "",
-            //         value1turn: true
-            //     }
-            //     return updatedObject;
-            // });
             total = calc.value1
         }
         else{
@@ -264,6 +194,17 @@ const Button = ({btn_obj}) => {
             toggleOperatorBtnActivity("off")
         }
 
+        if(Number(total) >= 1000000000){
+            total = formatLargeNumber(total)
+        }
+        else if(String(total).includes(".") && String(total).length > 10){
+            let before_pnt = String(total).split(".")[0]
+            let nb = 9 - before_pnt.length;
+            nb = nb < 0 ? nb*-1 : nb;
+            alert(nb)
+            total = Number(total).toFixed(nb)
+        }
+
         setCalc(prevState => {
             const updatedObject = {
                 ...prevState,
@@ -276,21 +217,9 @@ const Button = ({btn_obj}) => {
             return updatedObject;
         });
 
-        //// if(operator !== ""){
-        ////     document.getElementById(operator).style.color = "white"
-        ////     document.getElementById(operator).style.backgroundColor = "#FF9500"
-        //// }
-
     }
 
-    function AC_C_clicked(AC_C){
-        // setCalc({
-        //     ...calc,
-        //     value1: "",
-        //     value2: "",
-        //     operator: "",
-        //     output: "0"
-        // })
+    function AC_C_clicked(){
         if(calc.operator !== ""){
             document.getElementById(calc.operator).style.color = "white"
             document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
@@ -360,7 +289,6 @@ const Button = ({btn_obj}) => {
     }
 
     function plus_minus(){
-        // setOutput(Number(output) * -1 + "")
         let v1, v2, total
         if(calc.value1turn){
             if(calc.value1 === ''){
@@ -379,20 +307,19 @@ const Button = ({btn_obj}) => {
         }
         else{
             if(isOperatorBtnActive()){
-                setCalc({
-                    ...calc,
-                    value2: "-0",
-                    output: "-0"
-                })
+                v2 = "-0"
+                total = "-0"
                 toggleOperatorBtnActivity("off")
             }
             else{
-                setCalc({
-                    ...calc,
-                    value2: calc.value2 * -1,
-                    output: calc.value2 * -1
-                })
+                v2 = calc.value2 * -1
+                total = calc.value2 * -1
             }
+            setCalc({
+                ...calc,
+                value2: v2,
+                output: total
+            })
         }
     }
 
@@ -404,35 +331,6 @@ const Button = ({btn_obj}) => {
     }
 
     function toggleOperatorBtnActivity(toggle, op = calc.operator){
-        /*
-            * @param {string} toggle can be "on" or "off"
-        */
-        /*
-            - calc.operator = +
-            - calc.value2 = ''
-
-            -->
-                - operator color = white
-                - operator backgroundColor = "#FF9500"
-        */
-        // if(calc.operator !== "" && calc.value2 === ""){
-        //     document.getElementById(calc.operator).style.color = "white"
-        //     document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
-        // }
-        // else{
-        //     document.getElementById(calc.operator).style.color = "#FF9500"
-        //     document.getElementById(calc.operator).style.backgroundColor = "white"
-        // }
-        // if(calc.operator !== ""){
-        //     if(toggle === "on"){
-        //         document.getElementById(calc.operator).style.color = "#FF9500"
-        //         document.getElementById(calc.operator).style.backgroundColor = "white"
-        //     }
-        //     else{
-        //         document.getElementById(calc.operator).style.color = "white"
-        //         document.getElementById(calc.operator).style.backgroundColor = "#FF9500"
-        //     }
-        // }
         if(toggle === "on"){
             document.getElementById(op).style.color = "#FF9500"
             document.getElementById(op).style.backgroundColor = "white"
@@ -445,6 +343,24 @@ const Button = ({btn_obj}) => {
 
     function toggle_AC_C(AC_C){
         document.getElementById("AC_C").innerHTML = AC_C
+    }
+
+    function formatLargeNumber(result){
+        let res = Number(result)
+        if(String(res).length > 10){
+            res = res.toExponential(5)
+        }
+        else{
+            res = res.toExponential(6)
+        }
+
+        let [nb, exp] = res.split("e")
+        nb = Number(nb)
+        res = `${nb}e${exp}`
+
+        res = res.replace("+",'')
+
+        return res
     }
 
     return (
