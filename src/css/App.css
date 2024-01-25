@@ -26,14 +26,14 @@
   width: 100%;
   padding: 0 29px;
   display: flex;
-  flex-direction: unset;
+  flex-direction: row;
   justify-content: flex-end;
   align-items: flex-end;
 }
 .Screen .ResultScreen .result {
-  font-size: 93px;
   font-weight: 400;
   color: white;
+  text-align: end;
 }
 .Screen .ButtonsPart {
   width: 100%;

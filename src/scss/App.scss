@@ -25,9 +25,10 @@
         @include flex(row,flex-end,flex-end);
 
         .result{
-            font-size: 93px;
+            // font-size: 93px !important;
             font-weight: 400;
             color: white;
+            text-align: end;
         }
     }
 
