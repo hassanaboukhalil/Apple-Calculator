@@ -78,6 +78,10 @@ const Button = ({btn_obj}) => {
                 v2 = -(nb)
                 otpt = -(nb)
             }
+            else if(calc.value2 === "0"){
+                v2 = nb
+                otpt = v2
+            }
             else if(calc.value2.length === 9){
                 v2 = calc.value2
                 otpt = calc.value2
@@ -201,7 +205,6 @@ const Button = ({btn_obj}) => {
             let before_pnt = String(total).split(".")[0]
             let nb = 9 - before_pnt.length;
             nb = nb < 0 ? nb*-1 : nb;
-            alert(nb)
             total = Number(total).toFixed(nb)
         }
 
@@ -263,18 +266,27 @@ const Button = ({btn_obj}) => {
 
     function percent_clicked(){
         if(calc.value1turn){
+            let v1 , otpt
+            if(calc.value1 === '' && calc.output === '0'){
+                v1 = ''
+                otpt = "0"
+            }
+            else{
+                v1 = String(Number(calc.output)/100)
+                otpt = v1
+            }
             setCalc({
                 ...calc,
-                value1: String(Number(calc.value1)/100),
-                output: String(Number(calc.value1)/100),
+                value1: v1,
+                output: otpt,
             })
         }
         else{
             if(isOperatorBtnActive()){
                 setCalc({
                     ...calc,
-                    value2: 0,
-                    output: 0
+                    value2: "0",
+                    output: "0"
                 })
                 toggleOperatorBtnActivity("off")
             }
