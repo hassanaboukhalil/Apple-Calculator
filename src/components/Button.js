@@ -16,12 +16,11 @@ const Button = ({btn_obj}) => {
     }
 
     if(btn_obj.innertext === "0"){
-        styles.width = "188px"
         styles.borderRadius = "40px"
         styles.display = "flex"
         styles.alignItems = "center"
+        styles.flexGrow = "2"
     }
-
 
     function btn_clicked(){
         if("0123456789".includes(btn_obj.innertext)){
@@ -50,41 +49,35 @@ const Button = ({btn_obj}) => {
     }
 
     function nb_clicked(nb){
-        let v1, v2, otpt
+        let v1, v2
         if(calc.value1turn){
             if(calc.value1 === "-0"){
                 v1 = -(nb)
-                otpt = -(nb)
             }
             else if(calc.value1.length === 9){
                 v1 = calc.value1
-                otpt = calc.value1
             }
             else{
                 if(calc.value1 === ""){
                     toggle_AC_C("C")
                 }
                 v1 = calc.value1 + nb
-                otpt = calc.value1 + nb
             }
             setCalc({
                 ...calc,
                 value1: v1,
-                output: otpt
+                output: v1
             })
         }
         else{
             if(calc.value2 === "-0"){
                 v2 = -(nb)
-                otpt = -(nb)
             }
             else if(calc.value2 === "0"){
                 v2 = nb
-                otpt = v2
             }
             else if(calc.value2.length === 9){
                 v2 = calc.value2
-                otpt = calc.value2
             }
             else{
                 if(calc.value2 === ''){
@@ -92,19 +85,18 @@ const Button = ({btn_obj}) => {
                     toggle_AC_C("C")
                 }
                 v2 = calc.value2 + nb
-                otpt = calc.value2 + nb
             }
             setCalc({
                 ...calc,
                 value2: v2,
-                output: otpt
+                output: v2
             })
         }
     }
 
     function dot_clicked(){
-        let v1, v2 , otpt
-        if(!(String(calc.value1)).includes(".") && calc.value1turn){
+        let v1 = calc.value1, v2 = calc.value2 , otpt = calc.output
+        if(!(String(calc.value1).includes(".")) && calc.value1turn){
             if(calc.value1 === "" && calc.value2 === ""){
                 v1 = "0."
                 otpt = "0."
@@ -115,14 +107,8 @@ const Button = ({btn_obj}) => {
                 otpt = calc.value1 + "."
                 v2 = ''
             }
-            setCalc({
-                ...calc,
-                value1: v1,
-                value2: v2,
-                output: otpt
-            })
         }
-        else if(!(String(calc.value2)).includes(".") ){
+        else if(!(String(calc.value2).includes(".")) && !calc.value1turn){
 
             if(calc.value2 !== ''){
                 v1 = calc.value1
@@ -136,13 +122,13 @@ const Button = ({btn_obj}) => {
             }
 
             toggleOperatorBtnActivity("off")
-            setCalc({
-                ...calc,
-                value1: v1,
-                value2: v2,
-                output: otpt
-            })
         }
+        setCalc({
+            ...calc,
+            value1: v1,
+            value2: v2,
+            output: otpt
+        })
     }
 
     function operator_clicked(op){
@@ -170,7 +156,7 @@ const Button = ({btn_obj}) => {
             total = "Error"
         }
         else if(calc.value2 === "" && !isOperatorBtnActive()){
-            total = calc.value1
+            total = Number(calc.value1)
         }
         else{
             if(calc.value2 === "" && isOperatorBtnActive()){
@@ -198,14 +184,11 @@ const Button = ({btn_obj}) => {
             toggleOperatorBtnActivity("off")
         }
 
-        if(Number(total) >= 1000000000){
-            total = formatLargeNumber(total)
-        }
-        else if(String(total).includes(".") && String(total).length > 10){
+        if(String(total).includes(".") && String(total).length > 10){
             let before_pnt = String(total).split(".")[0]
             let nb = 9 - before_pnt.length;
             nb = nb < 0 ? nb*-1 : nb;
-            total = Number(total).toFixed(nb)
+            total = Number(Number(total).toFixed(nb))
         }
 
         setCalc(prevState => {
@@ -343,36 +326,20 @@ const Button = ({btn_obj}) => {
     }
 
     function toggleOperatorBtnActivity(toggle, op = calc.operator){
-        if(toggle === "on"){
-            document.getElementById(op).style.color = "#FF9500"
-            document.getElementById(op).style.backgroundColor = "white"
-        }
-        else{
-            document.getElementById(op).style.color = "white"
-            document.getElementById(op).style.backgroundColor = "#FF9500"
+        if(op !== ''){
+            if(toggle === "on"){
+                document.getElementById(op).style.color = "#FF9500"
+                document.getElementById(op).style.backgroundColor = "white"
+            }
+            else{
+                document.getElementById(op).style.color = "white"
+                document.getElementById(op).style.backgroundColor = "#FF9500"
+            }
         }
     }
 
     function toggle_AC_C(AC_C){
         document.getElementById("AC_C").innerHTML = AC_C
-    }
-
-    function formatLargeNumber(result){
-        let res = Number(result)
-        if(String(res).length > 10){
-            res = res.toExponential(5)
-        }
-        else{
-            res = res.toExponential(6)
-        }
-
-        let [nb, exp] = res.split("e")
-        nb = Number(nb)
-        res = `${nb}e${exp}`
-
-        res = res.replace("+",'')
-
-        return res
     }
 
     return (
@@ -381,7 +348,7 @@ const Button = ({btn_obj}) => {
             {btn_obj.type === "number" && btn_obj.innertext !== "0" ? (btn_obj.innertext) : ""}
             {btn_obj.type === "svg" ? (<svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.2083 13.9861H13.9023V18.6501H18.4563V20.1241H13.9023V24.7881H12.2083V20.1241H7.6543V18.6501H12.2083V13.9861Z" fill="black"/><path d="M12.7806 37.3862L28.06 14.0599L29.9769 14.4852L14.633 37.7971L12.7806 37.3862Z" fill="black"/><path d="M23.6183 35.9901V33.9701H34.3183V35.9901H23.6183Z" fill="black"/></svg>) : ""}
             {btn_obj.type === "fontawsome" ? (<FontAwesomeIcon icon={btn_obj.icon} size="2x" />) : ""}
-            {btn_obj.innertext === "0" ? (<span style={{paddingLeft: "27px"}}>{btn_obj.innertext}</span>) : ""}
+            {btn_obj.innertext === "0" ? (<span className="btn-zero">{btn_obj.innertext}</span>) : ""}
         </button>
     )
 }
