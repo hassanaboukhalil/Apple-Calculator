@@ -49,7 +49,7 @@ const ResultScreen = () => {
 
     return (
         <div className="ResultScreen">
-            <Textfit className="result" min={50} max={window.matchMedia("(min-width: 992px)").matches ? 63 : 100} mode="single" style={{width:"100%"}}>
+            <Textfit className="result" min={40} max={window.matchMedia("(min-width: 992px)").matches ? 63 : 100} mode="single" style={{width:"100%"}}>
                 <p data-testid="result">
                     {Number(calc.output) >= 1000000000 ? formatLargeNumber(calc.output) : addCommas(calc.output)}
                 </p>
